@@ -3,7 +3,7 @@ class RecipesController < ApplicationController
 
     def index
         recipes = Recipe.all
-        render json: recipes, include: :user, status: :created
+        render json: recipes, include: :user, status: :ok
     end
 
     def create
@@ -12,14 +12,14 @@ class RecipesController < ApplicationController
             if recipe.valid?
                 render json: recipe, include: :user, status: :created
             else
-                return render json: { errors: ["Not valid"] }, status: :unprocessable_entity
+                render json: { errors: ["Not valid"] }, status: :unprocessable_entity
             end
     end
 
     private
 
     def authorize
-        return render json: { errors: [ "Not authorized" ] }, status: :unauthorized unless session.include? :user_id
+        return render json: { errors: [ "Not authorized" ] }, status: :unauthorized unless session[:user_id]
     end
 
     def recipes_params
